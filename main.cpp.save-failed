@@ -1,0 +1,216 @@
+#include <iostream>
+#include <SFML/Graphics.hpp>
+
+#define MAX_ITEM_NUMBER 4
+
+using namespace std;
+
+void game();
+
+class menu
+{
+private:
+    int selecteditem;
+    sf::Font font;
+    sf::Text menuitem[MAX_ITEM_NUMBER];
+
+public:
+    menu(float width, float height);
+    ~menu();
+    void draw(sf::RenderWindow &window);
+    void moveup();
+    void movedown();
+    int presseditem()
+    {
+        return selecteditem;
+    }
+
+};
+
+menu::menu(float width,float height)
+{
+    if(!font.loadFromFile("font.ttf"))
+    {
+        cout<<"Unable to load file"<<endl;
+    }
+    menuitem[0].setFont(font);
+    menuitem[0].setColor(sf::Color(43, 79, 124));
+    menuitem[0].setString("Sart Game");
+    menuitem[0].setPosition(sf::Vector2f(370,300));
+
+    menuitem[1].setFont(font);
+    menuitem[1].setColor(sf::Color(69,123,193));
+    menuitem[1].setString("Instructions");
+    menuitem[1].setPosition(sf::Vector2f(370,380));
+
+    menuitem[2].setFont(font);
+    menuitem[2].setColor(sf::Color(69,123,193));
+    menuitem[2].setString("HighScore");
+    menuitem[2].setPosition(sf::Vector2f(370,460));
+
+    menuitem[3].setFont(font);
+    menuitem[3].setColor(sf::Color(69,123,193));
+    menuitem[3].setString("Quit");
+    menuitem[3].setPosition(sf::Vector2f(370,540));
+
+    selecteditem=0;
+}
+
+menu::~menu()
+{
+
+}
+void menu::draw(sf::RenderWindow &window)
+{
+    for(int i=0; i < MAX_ITEM_NUMBER ; i++)
+    {
+        window.draw(menuitem[i]);
+    }
+}
+
+void menu::moveup()
+{
+    if(selecteditem-1>=0)
+    {
+        menuitem[selecteditem].setColor(sf::Color(69,123,193));
+        selecteditem--;
+        menuitem[selecteditem].setColor(sf::Color(43, 79, 124));
+    }
+}
+
+void menu::movedown()
+{
+    if(selecteditem+1<MAX_ITEM_NUMBER)
+    {
+        menuitem[selecteditem].setColor(sf::Color(69,123,193));
+        selecteditem++;
+        menuitem[selecteditem].setColor(sf::Color(43, 79, 124));
+    }
+}
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(900, 900), "Number Sequence Game");
+
+    menu menu(window.getSize().x, window.getSize().y);
+
+    sf::Texture texture;
+
+    if(!texture.loadFromFile("background.jpg"))
+    {
+        cout<<"Error Loading background"<<endl;
+    }
+
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+
+    sf::Font font;
+    if (!font.loadFromFile("font.ttf"))
+    {
+        cout<<"Unable to load font"<<endl;
+    }
+
+
+    int width = window.getSize().x;
+
+    int x=0;
+
+    sf::Text text;
+    text.setFont(font);
+    text.setString("NUMBER SEQUENCE GAME");
+    text.setCharacterSize(42);
+    text.setPosition(sf::Vector2f(220,150));
+    text.setStyle(sf::Text::Bold);
+    text.setStyle(sf::Text::Underlined);
+
+
+
+    text.setFillColor(sf::Color(69,123,193));
+
+    text.setFillColor(sf::Color(69,123,193));
+
+
+
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+
+        while (window.pollEvent(event))
+        {
+            switch(event.type)
+            {
+            case sf::Event::KeyReleased:
+                switch (event.key.code)
+                {
+                case sf::Keyboard::Up:
+                    menu.moveup();
+                    break;
+                case sf::Keyboard::Down:
+                    menu.movedown();
+                    break;
+                case sf::Keyboard::Return:
+                    switch(menu.presseditem())
+                    {
+                    case 0:
+                        cout<<"Start game pressed"<<endl;
+                        {
+
+
+
+                            break;
+                        }
+
+
+                    case 1:
+                        {
+
+                        cout<<"instructions pressed"<<endl;
+                        break;
+
+                        }
+
+                    case 2:
+                        {
+
+                        cout<<"Highscore"<<endl;
+                        break;
+
+                        }
+
+
+                    case 3:
+                        {
+
+                        cout<<"Quit"<<endl;
+                        window.close();
+                        break;
+
+                        }
+                    }
+
+                }
+
+                break;
+            case sf::Event::Closed:
+                window.close();
+                break;
+
+            }
+        }
+
+        window.clear();
+
+        window.draw(sprite);
+        menu.draw(window);
+        window.draw(text);
+
+        window.display();
+
+
+
+    }
+
+    return 0;
+}
+
